@@ -9,6 +9,7 @@ import {
   Play,
   Settings2,
   ArrowRight,
+  GitBranch,
 } from "lucide-react"
 
 export interface FlowNodeData {
@@ -160,6 +161,60 @@ export function ActionNode({ data, selected }: NodeProps) {
         type="source"
         position={Position.Right}
         className="!h-2.5 !w-2.5 !rounded-full !border-2 !border-background !bg-purple-500"
+      />
+    </div>
+  )
+}
+
+export function IfElseNode({ data, selected }: NodeProps) {
+  const nodeData = data as FlowNodeData
+
+  return (
+    <div
+      className={`relative min-w-[220px] rounded-xl border bg-card/95 p-3 text-card-foreground shadow-sm backdrop-blur transition-all ${
+        selected
+          ? "border-amber-500 ring-2 ring-amber-500/20 shadow-lg"
+          : "border-border hover:border-amber-500/50 hover:shadow-md"
+      }`}
+    >
+      <Handle
+        type="target"
+        position={Position.Left}
+        className="!h-3 !w-3 !rounded-full !border-2 !border-background !bg-amber-500"
+      />
+      <div className="flex items-center gap-2">
+        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-500/10 text-amber-500">
+          <GitBranch className="h-4 w-4" />
+        </div>
+        <div>
+          <h4 className="text-xs font-semibold leading-none">{nodeData.title}</h4>
+          <p className="mt-0.5 text-[10px] text-muted-foreground">
+            {nodeData.subtitle}
+          </p>
+        </div>
+      </div>
+      {nodeData.description && (
+        <div className="mt-2 rounded-md bg-muted/50 p-2 text-[11px] text-muted-foreground">
+          {nodeData.description}
+        </div>
+      )}
+      <div className="mt-2 flex justify-end gap-5 pr-2 text-[10px] font-medium">
+        <span className="text-emerald-500">Yes</span>
+        <span className="text-destructive">No</span>
+      </div>
+      <Handle
+        id="yes"
+        type="source"
+        position={Position.Right}
+        style={{ top: "72%" }}
+        className="!h-3 !w-3 !rounded-full !border-2 !border-background !bg-emerald-500"
+      />
+      <Handle
+        id="no"
+        type="source"
+        position={Position.Right}
+        style={{ top: "88%" }}
+        className="!h-3 !w-3 !rounded-full !border-2 !border-background !bg-destructive"
       />
     </div>
   )

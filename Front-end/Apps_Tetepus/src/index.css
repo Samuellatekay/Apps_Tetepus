@@ -134,16 +134,17 @@
   background: transparent;
 }
 
-.react-flow__controls-button {
-  background: var(--card);
-  border-bottom-color: var(--border);
+.react-flow .react-flow__controls .react-flow__controls-button {
+  background-color: var(--card) !important;
+  border-color: var(--border) !important;
+  color: var(--foreground);
   fill: var(--foreground);
 }
 
-.react-flow__controls-button:hover {
-  background: var(--muted);
+.react-flow .react-flow__controls .react-flow__controls-button:hover {
+  background-color: var(--muted) !important;
 }
 
 .react-flow__attribution {
-  background: transparent;
+  display: none;
 }
