@@ -1,6 +1,5 @@
 import * as React from "react"
 
-import { NavDocuments } from "@/components/nav-documents"
 import { NavMain } from "@/components/nav-main"
 import { NavSecondary } from "@/components/nav-secondary"
 import { NavUser } from "@/components/nav-user"
@@ -16,7 +15,7 @@ import {
 import {
   LayoutDashboardIcon,
   WorkflowIcon,
-  ListIcon,
+  BlocksIcon,
   ChartBarIcon,
   FolderIcon,
   UsersIcon,
@@ -25,9 +24,6 @@ import {
   Settings2Icon,
   CircleHelpIcon,
   SearchIcon,
-  DatabaseIcon,
-  FileChartColumnIcon,
-  FileIcon,
   CommandIcon,
 } from "lucide-react"
 
@@ -51,10 +47,10 @@ const data = {
       icon: <WorkflowIcon className="text-purple-500" />,
     },
     {
-      id: "lifecycle",
-      title: "Lifecycle",
+      id: "integrations",
+      title: "Integrasi Apps",
       url: "#",
-      icon: <ListIcon />,
+      icon: <BlocksIcon className="text-sky-500" />,
     },
     {
       id: "analytics",
@@ -140,23 +136,6 @@ const data = {
       icon: <SearchIcon />,
     },
   ],
-  documents: [
-    {
-      name: "Data Library",
-      url: "#",
-      icon: <DatabaseIcon />,
-    },
-    {
-      name: "Reports",
-      url: "#",
-      icon: <FileChartColumnIcon />,
-    },
-    {
-      name: "Word Assistant",
-      url: "#",
-      icon: <FileIcon />,
-    },
-  ],
 }
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
@@ -186,7 +165,6 @@ export function AppSidebar({ activeTab, onSelectTab, ...props }: AppSidebarProps
           activeTab={activeTab}
           onSelectTab={onSelectTab}
         />
-        <NavDocuments items={data.documents} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
@@ -195,4 +173,3 @@ export function AppSidebar({ activeTab, onSelectTab, ...props }: AppSidebarProps
     </Sidebar>
   )
 }
-

@@ -2,6 +2,7 @@ import * as React from "react"
 import { AppSidebar } from "@/components/app-sidebar"
 import { ChartAreaInteractive } from "@/components/chart-area-interactive"
 import { DataTable } from "@/components/data-table"
+import { AppsIntegrations } from "@/components/integrations/apps-integrations"
 import { FlowSection } from "@/components/flow/flow-canvas"
 import { FlowDashboard } from "@/components/flow/flow-dashboard"
 import {
@@ -21,7 +22,7 @@ import data from "./data.json"
 const titles: Record<string, string> = {
   dashboard: "Dashboard",
   flow: "Automation Flow",
-  lifecycle: "Lifecycle",
+  integrations: "Integrasi Apps",
   analytics: "Analytics",
   projects: "Projects",
   team: "Team",
@@ -157,6 +158,8 @@ export default function Page() {
                       onDelete={handleDeleteFlow}
                     />
                   )
+                ) : activeTab === "integrations" ? (
+                  <AppsIntegrations />
                 ) : (
                   <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
                     <SectionCards />

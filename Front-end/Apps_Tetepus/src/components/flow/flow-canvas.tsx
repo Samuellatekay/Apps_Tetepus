@@ -27,7 +27,8 @@ import { WorkflowNode, ActionNode, IfElseNode, type FlowNodeData } from "./custo
 import { initialNodes, initialEdges } from "./flow-data"
 import { FlowToolbar } from "./flow-toolbar"
 import { FlowPalette } from "./flow-palette"
-import { flowNodeOptions } from "./flow-node-options"
+import { getFlowNodeOptions } from "./flow-node-options"
+import type { FlowNodeOption } from "./flow-node-options"
 import { FlowInspector } from "./flow-inspector"
 import type { AutomationFlow } from "./flow-store"
 
@@ -176,6 +177,7 @@ export function FlowCanvas({ initialFlow, onExitFlow, onSaveFlow }: FlowCanvasPr
     icon: string,
     tag: string,
     desc: string,
+    integrationId?: string,
     dropPosition?: XYPosition
   ) => {
     const newNodeId = `node-${Date.now()}`
@@ -262,6 +264,7 @@ export function FlowCanvas({ initialFlow, onExitFlow, onSaveFlow }: FlowCanvasPr
         icon,
         tag,
         description: desc,
+        ...(integrationId ? { integrationId } : {}),
         status: "idle",
       },
     }
@@ -352,7 +355,19 @@ export function FlowCanvas({ initialFlow, onExitFlow, onSaveFlow }: FlowCanvasPr
         onDrop={(event) => {
           event.preventDefault()
           const label = event.dataTransfer.getData("application/reactflow")
-          const option = flowNodeOptions.find((nodeOption) => nodeOption.label === label)
+          let option: FlowNodeOption | undefined
+          try {
+            option = getFlowNodeOptions().find(
+              (nodeOption) => nodeOption.label === label
+            )
+          } catch (error) {
+            window.alert(
+              error instanceof Error
+                ? `Daftar step integrasi gagal dimuat: ${error.message}`
+                : "Daftar step integrasi gagal dimuat."
+            )
+            return
+          }
           if (!option) return
 
           addCustomNode(
@@ -361,6 +376,7 @@ export function FlowCanvas({ initialFlow, onExitFlow, onSaveFlow }: FlowCanvasPr
             option.icon,
             option.tag,
             option.description,
+            option.integrationId,
             screenToFlowPosition({ x: event.clientX, y: event.clientY })
           )
         }}

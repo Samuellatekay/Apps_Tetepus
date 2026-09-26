@@ -1,21 +1,41 @@
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { flowNodeOptions } from "./flow-node-options"
+import { baseFlowNodeOptions, getFlowNodeOptions } from "./flow-node-options"
 
 interface FlowPaletteProps {
-  onAddNode: (type: string, title: string, icon: string, tag: string, desc: string) => void
+  onAddNode: (
+    type: string,
+    title: string,
+    icon: string,
+    tag: string,
+    desc: string,
+    integrationId?: string
+  ) => void
 }
 
 export function FlowPalette({ onAddNode }: FlowPaletteProps) {
   const [search, setSearch] = useState("")
+  const [nodeOptions] = useState(() => {
+    try {
+      return { options: getFlowNodeOptions(), error: null as string | null }
+    } catch (error) {
+      return {
+        options: baseFlowNodeOptions,
+        error: error instanceof Error ? error.message : "Daftar step integrasi gagal dimuat.",
+      }
+    }
+  })
   const query = search.trim().toLowerCase()
-  const filteredOptions = query === "/all"
-    ? flowNodeOptions
-    : flowNodeOptions.filter((option) =>
+  const filteredOptions = useMemo(() => {
+    const options = nodeOptions.options
+    return query === "/all"
+      ? options
+      : options.filter((option) =>
         [option.label, option.title, option.tag, option.description]
           .some((value) => value.toLowerCase().includes(query))
       )
+  }, [nodeOptions.options, query])
 
   return (
     <div className="relative flex w-fit max-w-full items-center gap-1.5 self-start rounded-lg border bg-muted/20 px-2 py-1.5">
@@ -33,9 +53,14 @@ export function FlowPalette({ onAddNode }: FlowPaletteProps) {
         placeholder="Search nodes..."
         className="h-7 w-32 text-[11px]"
       />
+      {nodeOptions.error && (
+        <span className="max-w-48 text-[10px] text-destructive" role="alert">
+          {nodeOptions.error}
+        </span>
+      )}
       {query && (
         <div className="absolute left-[4.5rem] top-full z-20 mt-1 flex max-h-56 min-w-36 flex-col gap-1 overflow-y-auto rounded-lg border bg-popover p-1.5 text-popover-foreground shadow-lg">
-          {filteredOptions.map(({ type, title, icon, tag, description, label, Icon, iconClassName }) => (
+          {filteredOptions.map(({ type, title, icon, tag, description, label, Icon, iconClassName, integrationId }) => (
             <Button
               key={label}
               variant="outline"
@@ -45,7 +70,7 @@ export function FlowPalette({ onAddNode }: FlowPaletteProps) {
                 event.dataTransfer.setData("application/reactflow", label)
                 event.dataTransfer.effectAllowed = "move"
               }}
-              onClick={() => onAddNode(type, title, icon, tag, description)}
+              onClick={() => onAddNode(type, title, icon, tag, description, integrationId)}
               className="h-7 w-full justify-start gap-1.5 px-2 text-[11px]"
             >
               <Icon className={`h-3.5 w-3.5 ${iconClassName}`} />

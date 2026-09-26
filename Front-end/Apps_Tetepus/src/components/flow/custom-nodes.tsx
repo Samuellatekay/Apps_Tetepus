@@ -1,4 +1,5 @@
 import { Handle, Position, type NodeProps } from "@xyflow/react"
+import { appCatalog } from "@/components/integrations/app-catalog"
 import {
   Webhook,
   Sparkles,
@@ -39,8 +40,14 @@ const getIcon = (type?: string) => {
       return <Send className="h-4 w-4 text-amber-500" />
     case "code":
       return <Code2 className="h-4 w-4 text-cyan-500" />
-    default:
+    default: {
+      const app = appCatalog.find((installedApp) => installedApp.id === type)
+      if (app) {
+        const AppIcon = app.icon
+        return <AppIcon className={`h-4 w-4 ${app.color.split(" ")[0]}`} />
+      }
       return <Play className="h-4 w-4 text-primary" />
+    }
   }
 }
 
